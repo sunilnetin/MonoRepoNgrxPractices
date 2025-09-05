@@ -1,0 +1,87 @@
+{
+  "name": "app-one",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "app-one/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/app-one",
+        "browser": "app-one/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "app-one/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "app-one/public"
+          }
+        ],
+        "styles": ["app-one/src/styles.css"],
+        "server": "app-one/src/main.server.ts",
+        "ssr": {
+          "entry": "app-one/src/server.ts"
+        },
+        "outputMode": "server"
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "app-one:build:production"
+        },
+        "development": {
+          "buildTarget": "app-one:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n",
+      "options": {
+        "buildTarget": "app-one:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "app-one:build",
+        "port": 4200,
+        "staticFilePath": "dist/app-one/browser",
+        "spa": true
+      }
+    }
+  }
+}
